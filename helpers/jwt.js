@@ -19,17 +19,3 @@ export const generateAdminToken = (id) => {
     { expiresIn: "10h" }
   );
 };
-
-export const verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
-};
-
-export const getUserDataFromToken = (token) => {
-  if (token) {
-      console.log(token)
-    const userData = verifyToken(token);
-    if (userData) return userData;
-  }
-
-  return {};
-};
