@@ -23,6 +23,15 @@ export async function createOffer (offer, userId) {
 }
 
 export async function getOffers (args) {
+    const schema = Joi.object({
+        condition: Joi.string().valid('NEW', 'USED'),
+        minPrice: Joi.number().integer().min(1),
+        maxPrice: Joi.number().integer().min(1),
+    });
+
+    const { error } = schema.validate(args);
+    if (error) return createError(400, error.details[0].message);
+
     const { condition, minPrice, maxPrice } = args;
 
     const filter = {};

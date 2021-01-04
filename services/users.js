@@ -15,7 +15,7 @@ export async function createUser (userData) {
         email: Joi.string().email({
             minDomainSegments: 2,
             tlds: { allow: ['com', 'net', 'ru'] },
-        }),
+        }).required(),
         password: Joi.string().min(4).max(15).required(),
     });
 
@@ -39,6 +39,17 @@ export async function createUser (userData) {
 }
 
 export async function verification (data) {
+    const schema = Joi.object({
+        email: Joi.string().email({
+            minDomainSegments: 2,
+            tlds: { allow: ['com', 'net', 'ru'] },
+        }).required(),
+        secretNumber: Joi.string().length(6).pattern(/^[0-9]+$/).required(),
+    });
+
+    const { error } = schema.validate(data);
+    if (error) return createError(400, error.details[0].message);
+
     const { email, secretNumber } = data;
 
     const existedUser = await User.findOne({ email });
@@ -49,7 +60,7 @@ export async function verification (data) {
     if (existedUser.isVerified === true)
         return createError(400, 'User already verified');
 
-    if (existedUser.secretNumber !== secretNumber)
+    if (existedUser.secretNumber != secretNumber)
         return createError(400, 'Wrong verification code');
 
     await User.updateMany(
@@ -65,6 +76,17 @@ export async function verification (data) {
 }
 
 export async function login (data) {
+    const schema = Joi.object({
+        email: Joi.string().email({
+            minDomainSegments: 2,
+            tlds: { allow: ['com', 'net', 'ru'] },
+        }).required(),
+        password: Joi.string().min(4).max(15).required()
+    });
+
+    const { error } = schema.validate(data);
+    if (error) return createError(400, error.details[0].message);
+
     const { email, password } = data;
 
     const existedUser = await User.findOne({ email });
@@ -95,15 +117,20 @@ export async function login (data) {
     return { token: generateToken(existedUser.userId) };
 }
 
-export async function getUser (id) {
-    return await User.findOne({ userId: id });
+export async function getUser (userId) {
+    return User.findOne({ userId });
 }
 
-export async function addAge (age, id) {
-    return await User.findOneAndUpdate(
-        { userId: id },
+export async function addAge (age, userId) {
+    const schema = Joi.number().min(10).max(110).required();
+
+    const { error } = schema.validate(age);
+    if (error) return createError(400, error.details[0].message);
+    
+    return User.findOneAndUpdate(
+        { userId },
         {
-            age: age,
+            age,
         },
         { new: true }
     );
