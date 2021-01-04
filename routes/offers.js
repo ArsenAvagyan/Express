@@ -1,13 +1,13 @@
-import express from "express";
-import { authMiddleware } from "../helpers/auth";
+import express from 'express';
+import { authMiddleware } from '../helpers/auth';
 import {
-  createOfferController,
-  getOffersController,
-} from "../controllers/offers";
+    createOfferController,
+    getOffersController,
+} from '../controllers/offers';
 
 const router = express.Router();
 
-router.post("/", authMiddleware, createOfferController);
-router.get("/", authMiddleware, getOffersController);
+router.post('/', authMiddleware, createOfferController);
+router.get('/', authMiddleware, getOffersController);
 
 module.exports = router;
