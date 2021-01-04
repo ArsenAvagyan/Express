@@ -49,7 +49,7 @@ export async function verification (data) {
     if (existedUser.isVerified === true)
         return createError(400, 'User already verified');
 
-    if (existedUser.secretNumber != secretNumber)
+    if (existedUser.secretNumber !== secretNumber)
         return createError(400, 'Wrong verification code');
 
     await User.updateMany(
