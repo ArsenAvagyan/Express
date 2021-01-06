@@ -10,4 +10,4 @@ const router = express.Router();
 router.post('/', authMiddleware, createOfferController);
 router.get('/', authMiddleware, getOffersController);
 
-module.exports = router;
+export default router;

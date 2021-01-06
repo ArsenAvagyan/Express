@@ -11,4 +11,4 @@ router.get('/', authMiddleware, getUserController);
 router.patch('/', authMiddleware, addAgeController);
 
 
-module.exports = router;
+export default router;

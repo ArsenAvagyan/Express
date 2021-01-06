@@ -1,7 +1,8 @@
 import sgMail from '@sendgrid/mail';
+import { sendGridSecret } from "./secrets"
 
-export const sendMsg = (emailAdr, number) => {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+export const sendMsg = (emailAdr: string, number: string) => {
+    sgMail.setApiKey(sendGridSecret);
     const msg = {
         to: emailAdr,
         from: 'mihran.guyumjyan@gmail.com',

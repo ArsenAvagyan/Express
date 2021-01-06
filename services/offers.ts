@@ -2,7 +2,21 @@ import Joi from 'joi';
 import createError from 'http-errors';
 import { Offer } from '../models/offers';
 
-export async function createOffer (offer, userId) {
+type CreateOffer = {
+    title: string,
+    condition: string,
+    productType: string,
+    price: { value: number, currency: string },
+    description?: string
+};
+
+type Filter = {
+    condition?: string,
+    minPrice?: number,
+    maxPrice?: number
+};
+
+export async function createOffer (offer: CreateOffer, userId: string) {
     const schema = Joi.object({
         title: Joi.string().min(3).max(30).required(),
         condition: Joi.string().valid('NEW', 'USED').required(),
@@ -22,7 +36,7 @@ export async function createOffer (offer, userId) {
     return { title, price, productType, condition, description };
 }
 
-export async function getOffers (args) {
+export async function getOffers (args: Filter) {
     const schema = Joi.object({
         condition: Joi.string().valid('NEW', 'USED'),
         minPrice: Joi.number().integer().min(1),

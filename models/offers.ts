@@ -1,4 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+interface OfferProps extends Document {
+    userId: string,
+    title: string,
+    productType: string,
+    price: { value: number, currency: string },
+    condition: string,
+    description?: string
+}
 
 const OfferSchema = new Schema({
     userId: { type: String, required: true },
@@ -15,4 +24,4 @@ const OfferSchema = new Schema({
 }
 );
 
-export const Offer = model('Offer', OfferSchema);
+export const Offer = model<OfferProps>('Offer', OfferSchema);

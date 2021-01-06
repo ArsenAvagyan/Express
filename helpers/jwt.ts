@@ -1,21 +1,22 @@
 import jwt from 'jsonwebtoken';
+import { webTokenSecret } from "./secrets"
 
-export const generateToken = (id) => {
+export const generateToken = (id: any) => {
     return jwt.sign(
         {
             userId: id,
         },
-        process.env.JWT_SECRET,
+        webTokenSecret,
         { expiresIn: '10h' }
     );
 };
 
-export const generateAdminToken = (id) => {
+export const generateAdminToken = (id: any) => {
     return jwt.sign(
         {
             adminId: id,
         },
-        process.env.JWT_SECRET,
+        webTokenSecret,
         { expiresIn: '10h' }
     );
 };

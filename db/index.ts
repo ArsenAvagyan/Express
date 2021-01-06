@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { mongoHostSecret, mongoPortSecret, mongoNameSecret } from "../helpers/secrets"
 
 export const connectMongo = async () => {
     try {
         await mongoose.connect(
-            `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_NAME}`,
+            `mongodb://${mongoHostSecret}:${mongoPortSecret}/${mongoNameSecret}`,
             {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,

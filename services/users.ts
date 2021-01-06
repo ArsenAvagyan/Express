@@ -8,7 +8,14 @@ import { History } from '../models/history';
 import { sendMsg } from '../helpers/sendgrid';
 import { generateToken } from '../helpers/jwt';
 
-export async function createUser (userData) {
+type UserInfo = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+};
+
+export async function createUser (userData: UserInfo) {
     const schema = Joi.object({
         firstName: Joi.string().min(3).max(15).required(),
         lastName: Joi.string().min(3).max(15).required(),
@@ -31,14 +38,14 @@ export async function createUser (userData) {
 
     const isVerified = false;
     const nanoid = customAlphabet('1234567890', 6);
-    const secretNumber = nanoid();
+    const secretNumber: string = nanoid();
 
     sendMsg(userData.email, secretNumber);
 
     return User.create({ ...userData, userId, isVerified, secretNumber });
 }
 
-export async function verification (data) {
+export async function verification (data: {email: string, secretNumber: number | string }) {
     const schema = Joi.object({
         email: Joi.string().email({
             minDomainSegments: 2,
@@ -75,7 +82,7 @@ export async function verification (data) {
     return User.findOne({ email });
 }
 
-export async function login (data) {
+export async function login (data: { email: string, password: string }) {
     const schema = Joi.object({
         email: Joi.string().email({
             minDomainSegments: 2,
@@ -117,11 +124,11 @@ export async function login (data) {
     return { token: generateToken(existedUser.userId) };
 }
 
-export async function getUser (userId) {
+export async function getUser (userId: string) {
     return User.findOne({ userId });
 }
 
-export async function addAge (age, userId) {
+export async function addAge (age: number, userId: string) {
     const schema = Joi.number().min(10).max(110).required();
 
     const { error } = schema.validate(age);
